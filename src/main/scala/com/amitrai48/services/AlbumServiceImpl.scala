@@ -1,25 +1,34 @@
 package com.amitrai48.services
 import com.amitrai48.models.Album
 import com.amitrai48.repositories.{AlbumRepository, AlbumRepositoryImpl}
+import slick.driver.H2Driver.api._
+
+import scala.concurrent.Future
 
 /**
   * Created by amit on 21/2/17.
   */
 class AlbumServiceImpl extends AlbumService {
   override val albumRepository: AlbumRepository = new AlbumRepositoryImpl
-  override def getAlbums: Seq[Album] = {
-    albumRepository.getAlbums
+  val db = Database.forConfig("h2db.db")
+
+  override def createAlbumSchema: Future[Unit] = {
+    db.run(albumRepository.createAlbumSchema)
   }
 
-  override def create(album: Album): Album = {
-    albumRepository.create(album)
+  override def getAlbums: Future[Seq[Album]] = {
+    db.run(albumRepository.getAlbums)
   }
 
-  override def delete(album: Album): Unit = {
-    albumRepository.delete(album)
+  override def create(album: Album): Future[Long] = {
+    db.run(albumRepository.create(album))
   }
 
-  override def update(album: Album): Album = {
-    albumRepository.update(album)
+  override def delete(id: Long): Future[Int] = {
+    db.run(albumRepository.delete(id))
+  }
+
+  override def update(album: Album): Future[Album] = {
+    db.run(albumRepository.update(album))
   }
 }
