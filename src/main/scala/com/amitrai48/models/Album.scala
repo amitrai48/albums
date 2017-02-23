@@ -6,8 +6,8 @@ import spray.json.DefaultJsonProtocol
 /**
   * Created by amit on 21/2/17.
   */
-case class Album(name: String, artist: String, year: Int)
+case class Album(name: String, artist: String, year: Int, id: Option[Long])
 
 object Album extends DefaultJsonProtocol with SprayJsonSupport {
-  implicit val albumJF = jsonFormat3(Album.apply)
+  implicit val albumJF = jsonFormat4(Album.apply)
 }
